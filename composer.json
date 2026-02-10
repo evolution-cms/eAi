@@ -38,6 +38,11 @@
       "providers": [
         "EvolutionCMS\\eAi\\eAiServiceProvider"
       ]
+    },
+    "evolution": {
+      "providers": [
+        "EvolutionCMS\\eAi\\eAiServiceProvider"
+      ]
     }
   }
 }

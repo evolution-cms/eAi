@@ -3,6 +3,8 @@
 use EvolutionCMS\Models\User;
 use EvolutionCMS\Models\UserAttribute;
 use EvolutionCMS\Models\UserRole;
+use Illuminate\Support\Facades\Schema;
+use Seiger\sTask\Models\sWorker;
 
 if (!function_exists('eAi_log')) {
     function eAi_log(string $message, int $type = 2): void
@@ -32,6 +34,8 @@ if (!function_exists('eAi_enabled')) {
 if (!function_exists('eAi_resolve_ids')) {
     function eAi_resolve_ids(): array
     {
+        eAi_register_stask_worker();
+
         $conversationUserId = 1;
         $initiatedByUserId = null;
         $context = 'cli';
@@ -54,6 +58,76 @@ if (!function_exists('eAi_resolve_ids')) {
             'initiated_by_user_id' => $initiatedByUserId,
             'context' => $context,
         ];
+    }
+}
+
+if (!function_exists('eAi_register_stask_worker')) {
+    function eAi_register_stask_worker(): void
+    {
+        $settings = eAi_settings();
+        if (($settings['queue_driver'] ?? 'stask') !== 'stask') {
+            return;
+        }
+
+        if (!class_exists(\Seiger\sTask\Facades\sTask::class) || !class_exists(sWorker::class)) {
+            return;
+        }
+
+        try {
+            if (!class_exists(Schema::class) || !Schema::hasTable('s_workers')) {
+                return;
+            }
+        } catch (Throwable $e) {
+            return;
+        }
+
+        $workers = [
+            [
+                'identifier' => 'eai',
+                'scope' => 'system',
+                'class' => \EvolutionCMS\eAi\sTask\AiJobWorker::class,
+                'active' => true,
+                'hidden' => 1,
+            ],
+            [
+                'identifier' => 'eai_smoke',
+                'scope' => 'eAi',
+                'class' => \EvolutionCMS\eAi\sTask\AiSmokeWorker::class,
+                'active' => true,
+                'hidden' => 0,
+            ],
+            [
+                'identifier' => 'eai_prompt',
+                'scope' => 'eAi',
+                'class' => \EvolutionCMS\eAi\sTask\AiPromptWorker::class,
+                'active' => true,
+                'hidden' => 0,
+            ],
+        ];
+
+        $position = (int) (sWorker::max('position') ?? 0);
+
+        foreach ($workers as $worker) {
+            $existing = sWorker::query()->where('identifier', $worker['identifier'])->first();
+            if ($existing) {
+                if ($existing->class !== $worker['class']) {
+                    $existing->class = $worker['class'];
+                    $existing->save();
+                }
+                continue;
+            }
+
+            $position++;
+            sWorker::query()->create([
+                'identifier' => $worker['identifier'],
+                'scope' => $worker['scope'],
+                'class' => $worker['class'],
+                'active' => $worker['active'],
+                'position' => $position,
+                'settings' => [],
+                'hidden' => $worker['hidden'],
+            ]);
+        }
     }
 }
 
@@ -225,5 +299,6 @@ Event::listen('evolution.OnManagerPageInit', function () {
         return;
     }
 
+    eAi_register_stask_worker();
     eAi_actor_user_id();
 });

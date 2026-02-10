@@ -74,28 +74,63 @@ class PendingDispatch
 
         $this->dispatched = true;
 
-        if ($this->shouldUseSTask()) {
-            $this->dispatchToSTask();
-            return;
+        $driver = $this->getQueueDriver();
+
+        if ($driver === 'stask') {
+            if ($this->canUseSTask()) {
+                $this->dispatchToSTask();
+                return;
+            }
+
+            $this->warnMissingSTask();
+
+            if ($this->getQueueFailover() === 'sync') {
+                $this->dispatchSync();
+                return;
+            }
         }
 
         $this->dispatchSync();
     }
 
-    protected function shouldUseSTask(): bool
+    protected function getQueueDriver(): string
     {
         $driver = 'stask';
         if (function_exists('config')) {
             $driver = (string)config('cms.settings.eAi.queue_driver', 'stask');
         }
 
-        return $driver === 'stask' && class_exists(\Seiger\sTask\Facades\sTask::class);
+        return $driver !== '' ? $driver : 'stask';
+    }
+
+    protected function getQueueFailover(): string
+    {
+        $failover = 'sync';
+        if (function_exists('config')) {
+            $failover = (string)config('cms.settings.eAi.queue_failover', 'sync');
+        }
+        return $failover !== '' ? $failover : 'sync';
+    }
+
+    protected function canUseSTask(): bool
+    {
+        return class_exists(\Seiger\sTask\Facades\sTask::class);
+    }
+
+    protected function warnMissingSTask(): void
+    {
+        if (function_exists('eAi_log')) {
+            eAi_log('eAi: sTask not available, falling back to sync.', 2);
+        }
     }
 
     protected function dispatchToSTask(): void
     {
         if (!class_exists(\Seiger\sTask\Facades\sTask::class)) {
-            $this->dispatchSync();
+            $this->warnMissingSTask();
+            if ($this->getQueueFailover() === 'sync') {
+                $this->dispatchSync();
+            }
             return;
         }
 
@@ -128,7 +163,9 @@ class PendingDispatch
             if (function_exists('eAi_log')) {
                 eAi_log('eAi: sTask dispatch failed: ' . $e->getMessage(), 2);
             }
-            $this->dispatchSync();
+            if ($this->getQueueFailover() === 'sync') {
+                $this->dispatchSync();
+            }
         }
     }
 

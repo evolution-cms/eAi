@@ -11,6 +11,7 @@ class eAiServiceProvider extends ServiceProvider
         $this->loadPluginsFrom(dirname(__DIR__) . '/plugins/');
         $this->registerFoundationShims();
         $this->registerPrismProvider();
+        $this->loadViewsFrom(dirname(__DIR__) . '/views', 'eAi');
     }
 
     public function boot(): void

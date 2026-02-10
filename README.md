@@ -132,6 +132,13 @@ To force sTask (default), set in `core/custom/config/cms/settings/eAi.php`:
 
 If sTask is not installed, eAi falls back to `sync` and logs a warning.
 
+### sTask UI Workers
+When sTask is installed, eAi auto‑registers two visible workers:
+- `eai_smoke` — runs a fixed prompt (quick smoke test).
+- `eai_prompt` — runs a custom prompt from the widget.
+
+These appear in the sTask interface and can be used to test AI responses end‑to‑end.
+
 ### Why shims exist
 Evolution CMS does not include `illuminate/foundation`. Laravel AI SDK references `Illuminate\Foundation\Queue\Queueable` and `Illuminate\Foundation\Bus\PendingDispatch`, so eAi provides minimal shim classes via `class_alias` to avoid `Class not found` errors.
 
