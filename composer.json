@@ -14,7 +14,7 @@
   "require": {
     "php": "^8.4",
     "evolution-cms/evolution": "^3.5.2",
-    "laravel/ai": "^1.0",
+    "laravel/ai": "^0.1",
     "seiger/stask": "dev-main"
   },
   "minimum-stability": "dev",
