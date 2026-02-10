@@ -24,7 +24,8 @@
       "EvolutionCMS\\eAi\\": "src/"
     },
     "files": [
-      "src/Support/AutoloadShims.php"
+      "src/Support/AutoloadShims.php",
+      "src/Support/PhpunitShims.php"
     ]
   },
   "repositories": [
