@@ -75,7 +75,7 @@ class eAiServiceProvider extends ServiceProvider
 
     protected function aliasIfMissing(string $alias, string $target): void
     {
-        if (class_exists($alias)) {
+        if (class_exists($alias, false)) {
             return;
         }
 
