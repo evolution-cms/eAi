@@ -110,8 +110,20 @@ if (!function_exists('eAi_register_stask_worker')) {
         foreach ($workers as $worker) {
             $existing = sWorker::query()->where('identifier', $worker['identifier'])->first();
             if ($existing) {
+                $changed = false;
                 if ($existing->class !== $worker['class']) {
                     $existing->class = $worker['class'];
+                    $changed = true;
+                }
+                if ((int)$existing->hidden !== (int)$worker['hidden']) {
+                    $existing->hidden = $worker['hidden'];
+                    $changed = true;
+                }
+                if ((string)$existing->scope !== (string)$worker['scope']) {
+                    $existing->scope = $worker['scope'];
+                    $changed = true;
+                }
+                if ($changed) {
                     $existing->save();
                 }
                 continue;

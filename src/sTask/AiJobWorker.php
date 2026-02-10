@@ -32,6 +32,11 @@ class AiJobWorker extends BaseWorker
         return 'Dispatches eAi queued jobs via sTask';
     }
 
+    public function taskMake(sTaskModel $task, array $opt = []): void
+    {
+        $this->markFailed($task, 'This worker is internal. Use eai_smoke or eai_prompt in sTask UI.');
+    }
+
     public function taskDispatch(sTaskModel $task, array $options = []): void
     {
         try {
