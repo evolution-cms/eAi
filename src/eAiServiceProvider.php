@@ -53,6 +53,11 @@ class eAiServiceProvider extends ServiceProvider
     protected function registerFoundationShims(): void
     {
         $this->aliasIfMissing(
+            'Laravel\\Ai\\AiServiceProvider',
+            \EvolutionCMS\eAi\LaravelAi\AiServiceProvider::class
+        );
+
+        $this->aliasIfMissing(
             'Illuminate\\Foundation\\Queue\\Queueable',
             \EvolutionCMS\eAi\Foundation\Queue\Queueable::class
         );

@@ -121,6 +121,8 @@ If sTask is not installed, eAi falls back to `sync` and logs a warning.
 ### Why shims exist
 Evolution CMS does not include `illuminate/foundation`. Laravel AI SDK references `Illuminate\Foundation\Queue\Queueable` and `Illuminate\Foundation\Bus\PendingDispatch`, so eAi provides minimal shim classes via `class_alias` to avoid `Class not found` errors.
 
+In Evo we also replace `Laravel\\Ai\\AiServiceProvider` with a shim provider to avoid Laravel publishing/migration hooks that rely on `$app->config` being a repository. eAi handles publishing and migrations natively.
+
 ### Security rules
 - Write actions are only allowed via manager ACL/roles.
 - If user context is missing, `conversation_user_id` falls back to `1` (admin). This does not grant extra rights because rights are defined by `actor_user_id`.
