@@ -122,6 +122,7 @@ If sTask is not installed, eAi falls back to `sync` and logs a warning.
 Evolution CMS does not include `illuminate/foundation`. Laravel AI SDK references `Illuminate\Foundation\Queue\Queueable` and `Illuminate\Foundation\Bus\PendingDispatch`, so eAi provides minimal shim classes via `class_alias` to avoid `Class not found` errors.
 
 In Evo we also replace `Laravel\\Ai\\AiServiceProvider` with a shim provider to avoid Laravel publishing/migration hooks that rely on `$app->config` being a repository. eAi handles publishing and migrations natively.
+The shim aliases are loaded via Composer `autoload.files` to ensure they run before provider registration.
 
 ### Security rules
 - Write actions are only allowed via manager ACL/roles.

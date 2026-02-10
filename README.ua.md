@@ -122,6 +122,7 @@ sTask — primary backend. `sync` — лише fallback для середови�
 Evolution CMS не включає `illuminate/foundation`. Laravel AI SDK використовує `Illuminate\Foundation\Queue\Queueable` і `Illuminate\Foundation\Bus\PendingDispatch`, тому eAi додає мінімальні shim‑класи через `class_alias`, щоб уникнути `Class not found`.
 
 У Evo також підміняємо `Laravel\\Ai\\AiServiceProvider` shim‑провайдером, щоб не викликати Laravel publishing/migrations, які очікують `$app->config` як Repository. Публікацію й міграції робить eAi нативно.
+Shim‑alias підвантажуються через Composer `autoload.files`, щоб вони спрацювали до реєстрації провайдерів.
 
 ### Важливі правила безпеки
 - Write‑дії виконуються тільки через manager ACL/ролі.

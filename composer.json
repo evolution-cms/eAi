@@ -22,7 +22,10 @@
   "autoload": {
     "psr-4": {
       "EvolutionCMS\\eAi\\": "src/"
-    }
+    },
+    "files": [
+      "src/Support/AutoloadShims.php"
+    ]
   },
   "repositories": [
     {
