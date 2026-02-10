@@ -71,21 +71,31 @@ If you need access to package interfaces, grant permissions `stask` (Access sTas
 ### MVP Smoke Test
 1. Install the package and publish configs.
 2. Set a provider API key (for example `OPENAI_API_KEY`) in `.env` or `core/custom/config/ai.php`.
-3. Run a minimal call from any ServiceProvider `boot()` (or a temporary route/controller):
+3. Run the built-in smoke test:
+
+```bash
+php artisan ai:test
+```
+
+4. Or run a minimal call from any ServiceProvider `boot()` (or a temporary route/controller):
 
 ```php
-use Laravel\Ai\Ai;
+use App\Ai\Agents\SupportAgent;
 
-$text = Ai::chat()->prompt('Hello from Evo')->send()->text;
+$agent = new SupportAgent();
+$response = $agent->prompt('Hello from Evo');
+
+echo $response->text;
 ```
 
 ### Usage
 Basic example:
 
 ```php
-use Laravel\Ai\Ai;
+use App\Ai\Agents\SupportAgent;
 
-$response = Ai::chat()->prompt('Hello from Evo')->send();
+$agent = new SupportAgent();
+$response = $agent->prompt('Hello from Evo');
 
 echo $response->text;
 ```

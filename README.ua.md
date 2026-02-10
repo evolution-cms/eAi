@@ -71,21 +71,31 @@ AI actor — звичайний manager user з роллю **AI** (роль ст
 ### MVP Smoke Test
 1. Встановіть пакет і опублікуйте конфіги.
 2. Додайте ключ провайдера (наприклад `OPENAI_API_KEY`) у `.env` або `core/custom/config/ai.php`.
-3. Виконайте мінімальний виклик у `boot()` будь‑якого ServiceProvider (або тимчасового route/controller):
+3. Запустіть вбудований smoke‑тест:
+
+```bash
+php artisan ai:test
+```
+
+4. Або виконайте мінімальний виклик у `boot()` будь‑якого ServiceProvider (або тимчасового route/controller):
 
 ```php
-use Laravel\Ai\Ai;
+use App\Ai\Agents\SupportAgent;
 
-$text = Ai::chat()->prompt('Hello from Evo')->send()->text;
+$agent = new SupportAgent();
+$response = $agent->prompt('Hello from Evo');
+
+echo $response->text;
 ```
 
 ### Використання
 Базовий приклад:
 
 ```php
-use Laravel\Ai\Ai;
+use App\Ai\Agents\SupportAgent;
 
-$response = Ai::chat()->prompt('Hello from Evo')->send();
+$agent = new SupportAgent();
+$response = $agent->prompt('Hello from Evo');
 
 echo $response->text;
 ```

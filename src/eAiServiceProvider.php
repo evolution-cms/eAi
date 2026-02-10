@@ -21,6 +21,8 @@ class eAiServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishResources();
+            $this->ensureConfigPublished();
+            $this->registerConsoleCommands();
         }
 
         $this->app->booted(function () {
@@ -32,12 +34,15 @@ class eAiServiceProvider extends ServiceProvider
 
     protected function publishResources(): void
     {
+        $settingsPath = $this->customConfigPath('cms/settings/eAi.php');
+        $aiConfigPath = $this->customConfigPath('ai.php');
+
         $this->publishes([
-            dirname(__DIR__) . '/config/eAiSettings.php' => config_path('cms/settings/eAi.php', true),
+            dirname(__DIR__) . '/config/eAiSettings.php' => $settingsPath,
         ], 'eai-config');
 
         $this->publishes([
-            dirname(__DIR__) . '/config/ai.php' => config_path('ai.php', true),
+            dirname(__DIR__) . '/config/ai.php' => $aiConfigPath,
         ], 'eai-ai-config');
 
         $stubsPath = dirname(__DIR__) . '/stubs';
@@ -48,6 +53,58 @@ class eAiServiceProvider extends ServiceProvider
                 $stubsPath . '/tool.stub' => base_path('stubs/tool.stub'),
             ], 'eai-stubs');
         }
+    }
+
+    protected function registerConsoleCommands(): void
+    {
+        if (class_exists(\EvolutionCMS\eAi\Console\AiTestCommand::class)) {
+            $this->commands([
+                \EvolutionCMS\eAi\Console\AiTestCommand::class,
+            ]);
+        }
+    }
+
+    protected function ensureConfigPublished(): void
+    {
+        $publishMap = [
+            dirname(__DIR__) . '/config/eAiSettings.php' => $this->customConfigPath('cms/settings/eAi.php'),
+            dirname(__DIR__) . '/config/ai.php' => $this->customConfigPath('ai.php'),
+        ];
+
+        foreach ($publishMap as $from => $to) {
+            if (!is_file($from)) {
+                continue;
+            }
+            if (is_file($to)) {
+                continue;
+            }
+            $directory = dirname($to);
+            if (!is_dir($directory)) {
+                mkdir($directory, 0755, true);
+            }
+            @copy($from, $to);
+        }
+    }
+
+    protected function customConfigPath(string $path): string
+    {
+        $path = ltrim($path, '/\\');
+
+        if (function_exists('config_path')) {
+            $candidate = config_path($path, true);
+            if (is_string($candidate) && $candidate !== '') {
+                $normalized = str_replace('\\', '/', $candidate);
+                if (str_contains($normalized, '/custom/config/')) {
+                    return $candidate;
+                }
+            }
+        }
+
+        if (defined('EVO_CORE_PATH')) {
+            return rtrim(EVO_CORE_PATH, '/\\') . '/custom/config/' . $path;
+        }
+
+        return base_path('core/custom/config/' . $path);
     }
 
     protected function registerFoundationShims(): void
