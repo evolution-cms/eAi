@@ -77,6 +77,12 @@ AI actor — звичайний manager user з роллю **AI** (роль ст
 php artisan ai:test
 ```
 
+Якщо використовуєте локальний Ollama, запустіть:
+
+```bash
+php artisan ai:test --provider=ollama
+```
+
 4. Або виконайте мінімальний виклик у `boot()` будь‑якого ServiceProvider (або тимчасового route/controller):
 
 ```php

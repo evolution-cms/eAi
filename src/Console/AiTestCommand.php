@@ -33,7 +33,14 @@ class AiTestCommand extends Command
         $selected = $this->resolveProvider($provider, $providers);
         if ($selected === null) {
             $this->error('No provider with a configured API key was found.');
-            $this->line('Add OPENAI_API_KEY (or another provider key) to .env and retry.');
+            $this->line('Add OPENAI_API_KEY (or another provider key) to .env and retry,');
+            $this->line('or run with --provider=ollama for a local setup.');
+            return self::FAILURE;
+        }
+
+        if ($this->requiresApiKey($selected) && !$this->providerHasKey($providers[$selected] ?? null)) {
+            $this->error('Selected provider requires an API key.');
+            $this->line('Set the provider key in .env or core/custom/config/ai.php and retry.');
             return self::FAILURE;
         }
 
@@ -84,12 +91,12 @@ class AiTestCommand extends Command
         }
 
         $default = config('ai.default');
-        if (is_string($default) && $default !== '' && $this->providerReady($providers[$default] ?? null)) {
+        if (is_string($default) && $default !== '' && $this->providerHasKey($providers[$default] ?? null)) {
             return $default;
         }
 
         foreach ($providers as $name => $config) {
-            if ($this->providerReady($config)) {
+            if ($this->providerHasKey($config)) {
                 return is_string($name) ? $name : null;
             }
         }
@@ -97,18 +104,18 @@ class AiTestCommand extends Command
         return null;
     }
 
-    protected function providerReady(mixed $config): bool
+    protected function providerHasKey(mixed $config): bool
     {
         if (!is_array($config)) {
             return false;
         }
-        $driver = $config['driver'] ?? null;
         $key = $config['key'] ?? null;
 
-        if (is_string($driver) && $driver === 'ollama') {
-            return true;
-        }
-
         return is_string($key) && trim($key) !== '';
+    }
+
+    protected function requiresApiKey(string $provider): bool
+    {
+        return $provider !== 'ollama';
     }
 }

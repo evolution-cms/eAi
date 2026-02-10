@@ -10,6 +10,7 @@ class eAiServiceProvider extends ServiceProvider
     {
         $this->loadPluginsFrom(dirname(__DIR__) . '/plugins/');
         $this->registerFoundationShims();
+        $this->registerPrismProvider();
     }
 
     public function boot(): void
@@ -128,6 +129,13 @@ class eAiServiceProvider extends ServiceProvider
             'Illuminate\\Foundation\\Bus\\Dispatchable',
             \EvolutionCMS\eAi\Foundation\Bus\Dispatchable::class
         );
+    }
+
+    protected function registerPrismProvider(): void
+    {
+        if (class_exists(\Prism\Prism\PrismServiceProvider::class)) {
+            $this->app->register(\Prism\Prism\PrismServiceProvider::class);
+        }
     }
 
     protected function aliasIfMissing(string $alias, string $target): void

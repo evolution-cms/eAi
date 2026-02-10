@@ -77,6 +77,12 @@ If you need access to package interfaces, grant permissions `stask` (Access sTas
 php artisan ai:test
 ```
 
+If you use local Ollama, run:
+
+```bash
+php artisan ai:test --provider=ollama
+```
+
 4. Or run a minimal call from any ServiceProvider `boot()` (or a temporary route/controller):
 
 ```php
