@@ -1,9 +1,7 @@
-<p align="center"><img src="/art/logo.svg" alt="Laravel AI SDK Package Logo"></p>
-
 <p align="center">
 <a href="https://packagist.org/packages/evolution-cms/eai"><img src="https://img.shields.io/packagist/dt/evolution-cms/eai" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/evolution-cms/eai"><img src="https://img.shields.io/packagist/v/evolution-cms/eai" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/evolution-cms/eai"><img src="https://img.shields.io/packagist/l/evolution-cms/eai" alt="License"></a>
+<img src="https://img.shields.io/badge/license-MIT-green" alt="License">
 </p>
 
 ## Вступ
