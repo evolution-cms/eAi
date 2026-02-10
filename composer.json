@@ -1,0 +1,40 @@
+{
+  "name": "evolution-cms/eai",
+  "description": "Laravel AI SDK integration for Evolution CMS",
+  "license": "MIT",
+  "type": "evolutioncms-plugin",
+  "keywords": [
+    "evo",
+    "evocms",
+    "evolution",
+    "evolution-cms",
+    "ai",
+    "laravel-ai"
+  ],
+  "require": {
+    "php": "^8.4",
+    "evolution-cms/evolution": "^3.5.2",
+    "laravel/ai": "^1.0",
+    "seiger/stask": "dev-main"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "EvolutionCMS\\eAi\\": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Seiger/sTask"
+    }
+  ],
+  "extra": {
+    "laravel": {
+      "providers": [
+        "EvolutionCMS\\eAi\\eAiServiceProvider"
+      ]
+    }
+  }
+}
