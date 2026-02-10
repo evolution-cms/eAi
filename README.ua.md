@@ -121,6 +121,22 @@ $agent = new SupportAgent();
 $response = $agent->prompt('Summarize this page');
 ```
 
+### Artisan‑генератори
+Створити агента:
+
+```bash
+php artisan make:agent SalesCoach
+php artisan make:agent SalesCoach --structured
+```
+
+Створити tool:
+
+```bash
+php artisan make:tool RandomNumberGenerator
+```
+
+Класи створюються у `core/custom/app/Ai/...`. Якщо автолоадинг не оновився — запусти `composer dumpautoload`.
+
 ### Черги
 sTask — primary backend. `sync` — лише fallback для середовищ без sTask або для локальних smoke‑тестів. eAi не повторює Laravel Queue API, а лише забезпечує сумісність викликів SDK.
 

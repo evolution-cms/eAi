@@ -59,10 +59,20 @@ class eAiServiceProvider extends ServiceProvider
 
     protected function registerConsoleCommands(): void
     {
+        $commands = [];
+
         if (class_exists(\EvolutionCMS\eAi\Console\AiTestCommand::class)) {
-            $this->commands([
-                \EvolutionCMS\eAi\Console\AiTestCommand::class,
-            ]);
+            $commands[] = \EvolutionCMS\eAi\Console\AiTestCommand::class;
+        }
+        if (class_exists(\EvolutionCMS\eAi\Console\MakeAgentCommand::class)) {
+            $commands[] = \EvolutionCMS\eAi\Console\MakeAgentCommand::class;
+        }
+        if (class_exists(\EvolutionCMS\eAi\Console\MakeToolCommand::class)) {
+            $commands[] = \EvolutionCMS\eAi\Console\MakeToolCommand::class;
+        }
+
+        if ($commands !== []) {
+            $this->commands($commands);
         }
     }
 

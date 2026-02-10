@@ -121,6 +121,22 @@ $agent = new SupportAgent();
 $response = $agent->prompt('Summarize this page');
 ```
 
+### Artisan Generators
+Create an agent:
+
+```bash
+php artisan make:agent SalesCoach
+php artisan make:agent SalesCoach --structured
+```
+
+Create a tool:
+
+```bash
+php artisan make:tool RandomNumberGenerator
+```
+
+Generated classes are placed in `core/custom/app/Ai/...`. If autoloading is not updated yet, run `composer dumpautoload`.
+
 ### Queues
 sTask is the primary backend. `sync` is a fallback for environments without sTask or for local smoke tests. eAi does not implement Laravel Queue; it only provides SDK‑compatible dispatching.
 

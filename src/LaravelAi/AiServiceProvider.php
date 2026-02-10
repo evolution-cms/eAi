@@ -7,8 +7,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Stringable;
 use Laravel\Ai\AiManager;
-use Laravel\Ai\Console\Commands\MakeAgentCommand;
-use Laravel\Ai\Console\Commands\MakeToolCommand;
 use Laravel\Ai\Contracts\ConversationStore;
 use Laravel\Ai\Storage\DatabaseConversationStore;
 
@@ -23,8 +21,7 @@ class AiServiceProvider extends ServiceProvider
     public function boot()
     {
         if ($this->app->runningInConsole()) {
-            $this->registerCommands();
-            // Publishing is handled by eAi; avoid Laravel publish/migration hooks in Evo.
+            // Commands are registered by eAiServiceProvider.
         }
 
         Stringable::macro('toEmbeddings', function (
@@ -73,9 +70,6 @@ class AiServiceProvider extends ServiceProvider
 
     protected function registerCommands(): void
     {
-        $this->commands([
-            MakeAgentCommand::class,
-            MakeToolCommand::class,
-        ]);
+        // no-op: commands are registered by eAiServiceProvider
     }
 }
