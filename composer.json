@@ -15,7 +15,7 @@
     "php": "^8.4",
     "evolution-cms/evolution": "^3.5.2",
     "laravel/ai": "^0.1",
-    "seiger/stask": "dev-main"
+    "seiger/stask": "^1.0"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
